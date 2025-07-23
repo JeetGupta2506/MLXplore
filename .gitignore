@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.venv
+venv/
+ENV/
+env/
+# Jupyter
+.ipynb_checkpoints
+# VSCode
+.vscode/
+# OS
+.DS_Store
+Thumbs.db
+# Streamlit
+.streamlit/
+# Data
+*.csv
+*.tsv
+*.h5
+*.hdf5
+*.db
+*.sqlite
+*.log
+# Other
+*.egg-info/
