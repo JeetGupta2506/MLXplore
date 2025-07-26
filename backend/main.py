@@ -58,11 +58,11 @@ def preview(request: PreviewRequest):
             data = load_digits()
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Moons":
-            X, y = make_moons(noise=0.3, random_state=0)
+            X, y = make_moons(n_samples=100, noise=0, random_state=0)
         elif request.dataset == "Blobs":
-            X, y = make_blobs(n_samples=150, centers=3, random_state=0, cluster_std=1.0)
+            X, y = make_blobs(n_samples=150, centers=3, random_state=0, cluster_std=0.0)
         elif request.dataset == "Circles":
-            X, y = make_circles(noise=0.2, factor=0.5, random_state=1)
+            X, y = make_circles(noise=0, factor=0.5, random_state=1)
         elif request.dataset == "Gaussian Quantiles":
             X, y = make_gaussian_quantiles(n_samples=150, n_features=2, n_classes=3, random_state=1)
         else:
@@ -83,7 +83,7 @@ def preview(request: PreviewRequest):
             data = load_diabetes()
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Synthetic":
-            X, y = make_regression(n_samples=200, n_features=2, noise=10, random_state=42)
+            X, y = make_regression(n_samples=200, n_features=2, noise=0, random_state=42)
         else:
             return {"error": f"Unknown regression dataset: {request.dataset}"}
         # --- Matplotlib image generation ---
@@ -99,11 +99,11 @@ def preview(request: PreviewRequest):
         return {"X": X.tolist(), "y": y.tolist(), "image": img_base64}
     elif request.task == "clustering":
         if request.dataset == "Blobs":
-            X, _ = make_blobs(n_samples=200, centers=3, random_state=42)
+            X, _ = make_blobs(n_samples=200, centers=3, random_state=42, cluster_std=0.0)
         elif request.dataset == "Moons":
-            X, _ = make_moons(n_samples=200, noise=0.1, random_state=42)
+            X, _ = make_moons(n_samples=200, noise=0, random_state=42)
         elif request.dataset == "Circles":
-            X, _ = make_circles(n_samples=200, noise=0.1, factor=0.5, random_state=42)
+            X, _ = make_circles(n_samples=200, noise=0, factor=0.5, random_state=42)
         elif request.dataset == "Gaussian Quantiles":
             X, _ = make_gaussian_quantiles(n_samples=200, n_features=2, n_classes=3, random_state=42)
         elif request.dataset == "Iris":
@@ -142,11 +142,11 @@ def train(request: TrainRequest):
             data = load_digits()
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Moons":
-            X, y = make_moons(noise=0.3, random_state=0)
+            X, y = make_moons(n_samples=100, noise=0, random_state=0)
         elif request.dataset == "Blobs":
-            X, y = make_blobs(n_samples=150, centers=3, random_state=0, cluster_std=1.0)
+            X, y = make_blobs(n_samples=150, centers=3, random_state=0, cluster_std=0.0)
         elif request.dataset == "Circles":
-            X, y = make_circles(noise=0.2, factor=0.5, random_state=1)
+            X, y = make_circles(noise=0, factor=0.5, random_state=1)
         elif request.dataset == "Gaussian Quantiles":
             X, y = make_gaussian_quantiles(n_samples=150, n_features=2, n_classes=3, random_state=1)
         else:
@@ -216,7 +216,7 @@ def train(request: TrainRequest):
             data = load_diabetes()
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Synthetic":
-            X, y = make_regression(n_samples=200, n_features=2, noise=10, random_state=42)
+            X, y = make_regression(n_samples=200, n_features=2, noise=0, random_state=42)
         else:
             return {"error": f"Unknown regression dataset: {request.dataset}"}
         # Split
@@ -260,11 +260,11 @@ def train(request: TrainRequest):
     elif request.task == "clustering":
         # Dataset selection (no y)
         if request.dataset == "Blobs":
-            X, _ = make_blobs(n_samples=200, centers=3, random_state=42)
+            X, _ = make_blobs(n_samples=200, centers=3, random_state=42, cluster_std=0.0)
         elif request.dataset == "Moons":
-            X, _ = make_moons(n_samples=200, noise=0.1, random_state=42)
+            X, _ = make_moons(n_samples=200, noise=0, random_state=42)
         elif request.dataset == "Circles":
-            X, _ = make_circles(n_samples=200, noise=0.1, factor=0.5, random_state=42)
+            X, _ = make_circles(n_samples=200, noise=0, factor=0.5, random_state=42)
         elif request.dataset == "Gaussian Quantiles":
             X, _ = make_gaussian_quantiles(n_samples=200, n_features=2, n_classes=3, random_state=42)
         elif request.dataset == "Iris":
