@@ -9,7 +9,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neural_network import MLPClassifier
-from sklearn.datasets import make_moons, make_blobs, load_wine, load_breast_cancer, load_digits, make_circles, make_gaussian_quantiles, load_diabetes, make_regression
+from sklearn.datasets import make_moons, make_blobs, load_wine, load_breast_cancer, load_digits, make_circles, make_gaussian_quantiles, load_diabetes, make_regression, fetch_california_housing
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.metrics import r2_score, mean_squared_error
 import numpy as np
@@ -79,8 +79,8 @@ def preview(request: PreviewRequest):
         # ---
         return {"X": X.tolist(), "y": y.tolist(), "image": img_base64}
     elif request.task == "regression":
-        if request.dataset == "Diabetes":
-            data = load_diabetes()
+        if request.dataset == "California Housing":
+            data = fetch_california_housing()
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Synthetic":
             X, y = make_regression(n_samples=200, n_features=2, noise=0, random_state=42)
@@ -176,7 +176,7 @@ def train(request: TrainRequest):
             return {"error": "Unknown model"}
         model.fit(X_train, y_train)
         score = model.score(X_test, y_test)
-        # For decision boundary
+        # For decision boundary - use full dataset
         h = .02
         x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
         y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
@@ -184,13 +184,11 @@ def train(request: TrainRequest):
                              np.arange(y_min, y_max, h))
         Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
         Z = Z.reshape(xx.shape)
-        # --- Plot decision boundary and points ---
+        # --- Plot decision boundary and full dataset ---
         fig, ax = plt.subplots()
         ax.contourf(xx, yy, Z, alpha=0.3)
-        scatter1 = ax.scatter(X_train[:,0], X_train[:,1], c=y_train, marker='o', edgecolor='k', label='Train', alpha=0.8)
-        scatter2 = ax.scatter(X_test[:,0], X_test[:,1], c=y_test, marker='^', edgecolor='k', label='Test', alpha=1.0)
-        ax.set_title("Decision Boundary & Train/Test Split")
-        ax.legend()
+        scatter = ax.scatter(X[:,0], X[:,1], c=y, marker='o', edgecolor='k', alpha=0.8)
+        ax.set_title("Decision Boundary & Full Dataset")
         buf = BytesIO()
         plt.savefig(buf, format='png')
         buf.seek(0)
@@ -212,8 +210,8 @@ def train(request: TrainRequest):
         }
     elif request.task == "regression":
         # Dataset selection (case-sensitive)
-        if request.dataset == "Diabetes":
-            data = load_diabetes()
+        if request.dataset == "California Housing":
+            data = fetch_california_housing()
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Synthetic":
             X, y = make_regression(n_samples=200, n_features=2, noise=0, random_state=42)
@@ -232,13 +230,19 @@ def train(request: TrainRequest):
         y_pred = model.predict(X_test)
         r2 = r2_score(y_test, y_pred)
         mse = mean_squared_error(y_test, y_pred)
-        # --- Plot true vs predicted ---
+        # --- Plot regression on full dataset ---
         fig, ax = plt.subplots()
-        ax.scatter(y_test, y_pred, c='blue', label='Test', alpha=0.7)
-        ax.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], 'r--', label='Ideal')
-        ax.set_xlabel("True Value")
-        ax.set_ylabel("Predicted Value")
-        ax.set_title("Regression: True vs. Predicted (Test Set)")
+        # Plot full dataset
+        ax.scatter(X[:,0], y, c='blue', alpha=0.7, label='Data')
+        # Plot regression line/curve - use both features
+        X_sorted = np.sort(X[:,0])
+        # Create 2D array with both features for prediction
+        X_plot = np.column_stack([X_sorted, np.full_like(X_sorted, X[:,1].mean())])  # Use mean of second feature
+        y_pred_plot = model.predict(X_plot)
+        ax.plot(X_sorted, y_pred_plot, 'r-', linewidth=2, label='Regression Line')
+        ax.set_xlabel("Feature 1")
+        ax.set_ylabel("Target")
+        ax.set_title("Regression: Model Fit on Full Dataset")
         ax.legend()
         buf = BytesIO()
         plt.savefig(buf, format='png')

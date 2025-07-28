@@ -15,8 +15,12 @@ import {
   Stack,
   Divider,
   Card,
-  CardContent
+  CardContent,
+  IconButton,
+  ThemeProvider,
+  createTheme
 } from '@mui/material';
+import { Brightness4, Brightness7 } from '@mui/icons-material';
 
 const drawerWidth = 320;
 
@@ -31,7 +35,7 @@ const DATASETS = {
     'Iris', 'Wine', 'Breast Cancer', 'Digits', 'Moons', 'Blobs', 'Circles', 'Gaussian Quantiles'
   ],
   regression: [
-    'Diabetes', 'Synthetic'
+    'California Housing', 'Synthetic'
   ],
   clustering: [
     'Blobs', 'Moons', 'Circles', 'Gaussian Quantiles', 'Iris'
@@ -177,6 +181,28 @@ function App() {
   const [trainResult, setTrainResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Create theme based on darkMode state
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? 'dark' : 'light',
+      primary: {
+        main: '#1976d2',
+      },
+      secondary: {
+        main: '#dc004e',
+      },
+      background: {
+        default: darkMode ? '#121212' : '#f5f5f5',
+        paper: darkMode ? '#1e1e1e' : '#ffffff',
+      },
+    },
+  });
+
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
 
   // Reset params on model change
   React.useEffect(() => {
@@ -268,76 +294,88 @@ function App() {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      {/* Sidebar Drawer */}
-      <Drawer
-        variant="permanent"
-        anchor="left"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box', p: 2 }
-        }}
-      >
-        <Typography variant="h5" sx={{ mb: 2 }}>MLPlay Controls</Typography>
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel>Task</InputLabel>
-          <Select value={task} label="Task" onChange={handleTaskChange}>
-            {TASKS.map(t => <MenuItem key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</MenuItem>)}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel>Dataset</InputLabel>
-          <Select value={dataset} label="Dataset" onChange={handleDatasetChange}>
-            {DATASETS[task].map(d => <MenuItem key={d} value={d}>{d}</MenuItem>)}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel>Model</InputLabel>
-          <Select value={model} label="Model" onChange={handleModelChange}>
-            {MODELS[task].map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
-          </Select>
-        </FormControl>
-        <Divider sx={{ my: 2 }} />
-        <Typography variant="subtitle1" sx={{ mb: 1 }}>Parameters</Typography>
-        {getParamFields(model, params, setParams)}
-        <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-          <Button variant="contained" color="primary" onClick={handlePreview} disabled={loading}>Preview</Button>
-          <Button variant="contained" color="secondary" onClick={handleTrain} disabled={loading}>Train & Visualize</Button>
-        </Stack>
-      </Drawer>
-      {/* Main Content */}
-      <Box sx={{ flexGrow: 1, p: 3, ml: `${drawerWidth}px` }}>
-        <Typography variant="h3" gutterBottom align="center">MLPlay: ML Playground</Typography>
-        {loading && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
-            <CircularProgress />
+    <ThemeProvider theme={theme}>
+      <Box sx={{ display: 'flex', bgcolor: 'background.default', minHeight: '100vh' }}>
+        {/* Sidebar Drawer */}
+        <Drawer
+          variant="permanent"
+          anchor="left"
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            [`& .MuiDrawer-paper`]: { 
+              width: drawerWidth, 
+              boxSizing: 'border-box', 
+              p: 2,
+              bgcolor: 'background.paper'
+            }
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="h5">MLPlay Controls</Typography>
+            <IconButton onClick={toggleTheme} color="inherit">
+              {darkMode ? <Brightness7 /> : <Brightness4 />}
+            </IconButton>
           </Box>
-        )}
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
-        )}
-        {/* Preview Section: Only Matplotlib image */}
-        {preview && preview.image && (
-          <Card variant="outlined" sx={{ mb: 3 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>Dataset Preview</Typography>
-              <img src={`data:image/png;base64,${preview.image}`} alt="Preview Visualization" style={{maxWidth: '100%'}} />
-            </CardContent>
-          </Card>
-        )}
-        {/* Train Result Section: Only Matplotlib image and metrics */}
-        {trainMetrics}
-        {trainResult && trainResult.image && (
-          <Card variant="outlined">
-            <CardContent>
-              <Typography variant="h6" gutterBottom>Result Visualization</Typography>
-              <img src={`data:image/png;base64,${trainResult.image}`} alt="Result Visualization" style={{maxWidth: '100%'}} />
-            </CardContent>
-          </Card>
-        )}
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Task</InputLabel>
+            <Select value={task} label="Task" onChange={handleTaskChange}>
+              {TASKS.map(t => <MenuItem key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</MenuItem>)}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Dataset</InputLabel>
+            <Select value={dataset} label="Dataset" onChange={handleDatasetChange}>
+              {DATASETS[task].map(d => <MenuItem key={d} value={d}>{d}</MenuItem>)}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Model</InputLabel>
+            <Select value={model} label="Model" onChange={handleModelChange}>
+              {MODELS[task].map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
+            </Select>
+          </FormControl>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="subtitle1" sx={{ mb: 1 }}>Parameters</Typography>
+          {getParamFields(model, params, setParams)}
+          <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+            <Button variant="contained" color="primary" onClick={handlePreview} disabled={loading}>Preview</Button>
+            <Button variant="contained" color="secondary" onClick={handleTrain} disabled={loading}>Train & Visualize</Button>
+          </Stack>
+        </Drawer>
+        {/* Main Content */}
+        <Box sx={{ flexGrow: 1, p: 3, ml: `${drawerWidth}px`, bgcolor: 'background.default' }}>
+          <Typography variant="h3" gutterBottom align="center" sx={{ color: 'text.primary' }}>MLPlay: ML Playground</Typography>
+          {loading && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+              <CircularProgress />
+            </Box>
+          )}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
+          )}
+          {/* Preview Section: Only Matplotlib image */}
+          {preview && preview.image && (
+            <Card variant="outlined" sx={{ mb: 3, bgcolor: 'background.paper' }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom sx={{ color: 'text.primary' }}>Dataset Preview</Typography>
+                <img src={`data:image/png;base64,${preview.image}`} alt="Preview Visualization" style={{maxWidth: '100%'}} />
+              </CardContent>
+            </Card>
+          )}
+          {/* Train Result Section: Only Matplotlib image and metrics */}
+          {trainMetrics}
+          {trainResult && trainResult.image && (
+            <Card variant="outlined" sx={{ bgcolor: 'background.paper' }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom sx={{ color: 'text.primary' }}>Result Visualization</Typography>
+                <img src={`data:image/png;base64,${trainResult.image}`} alt="Result Visualization" style={{maxWidth: '100%'}} />
+              </CardContent>
+            </Card>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </ThemeProvider>
   );
 }
 
