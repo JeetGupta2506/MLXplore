@@ -354,7 +354,7 @@ function App() {
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
           )}
-          {/* Preview Section: Only Matplotlib image */}
+          {/* Preview Section: Only Matplotlib image preview */}
           {preview && preview.image && (
             <Card variant="outlined" sx={{ mb: 3, bgcolor: 'background.paper' }}>
               <CardContent>
