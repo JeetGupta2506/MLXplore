@@ -18,11 +18,27 @@ import {
   CardContent,
   IconButton,
   ThemeProvider,
-  createTheme
+  createTheme,
+  Paper,
+  Chip,
+  Fade,
+  Zoom,
+  LinearProgress
 } from '@mui/material';
-import { Brightness4, Brightness7 } from '@mui/icons-material';
+import { 
+  Brightness4, 
+  Brightness7, 
+  PlayArrow, 
+  Visibility, 
+  Science, 
+  Dataset, 
+  ModelTraining,
+  Settings,
+  TrendingUp,
+  Analytics
+} from '@mui/icons-material';
 
-const drawerWidth = 320;
+const drawerWidth = 300;
 
 const TASKS = [
   'classification',
@@ -183,19 +199,81 @@ function App() {
   const [error, setError] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
 
-  // Create theme based on darkMode state
+  // Create enhanced theme with better colors and gradients
   const theme = createTheme({
     palette: {
       mode: darkMode ? 'dark' : 'light',
       primary: {
-        main: '#1976d2',
+        main: '#6366f1',
+        light: '#818cf8',
+        dark: '#4f46e5',
       },
       secondary: {
-        main: '#dc004e',
+        main: '#ec4899',
+        light: '#f472b6',
+        dark: '#db2777',
       },
       background: {
-        default: darkMode ? '#121212' : '#f5f5f5',
-        paper: darkMode ? '#1e1e1e' : '#ffffff',
+        default: darkMode ? '#0f0f23' : '#f8fafc',
+        paper: darkMode ? '#1a1a2e' : '#ffffff',
+      },
+      text: {
+        primary: darkMode ? '#e2e8f0' : '#1e293b',
+        secondary: darkMode ? '#94a3b8' : '#64748b',
+      },
+    },
+    typography: {
+      fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+      h3: {
+        fontWeight: 700,
+        background: darkMode 
+          ? 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)'
+          : 'linear-gradient(135deg, #1e293b 0%, #6366f1 100%)',
+        backgroundClip: 'text',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+      },
+      h5: {
+        fontWeight: 600,
+      },
+      h6: {
+        fontWeight: 600,
+      },
+    },
+    shape: {
+      borderRadius: 12,
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 8,
+            textTransform: 'none',
+            fontWeight: 600,
+            padding: '10px 24px',
+          },
+        },
+      },
+      MuiCard: {
+        styleOverrides: {
+          root: {
+            borderRadius: 16,
+            boxShadow: darkMode 
+              ? '0 4px 20px rgba(0, 0, 0, 0.3)'
+              : '0 4px 20px rgba(0, 0, 0, 0.08)',
+          },
+        },
+      },
+      MuiSlider: {
+        styleOverrides: {
+          root: {
+            color: '#6366f1',
+          },
+          thumb: {
+            width: 20,
+            height: 20,
+          },
+        },
       },
     },
   });
@@ -285,18 +363,76 @@ function App() {
   let trainMetrics = null;
   if (trainResult) {
     if (trainResult.task === 'classification') {
-      trainMetrics = <Alert severity="success" sx={{ mb: 2 }}>Test Accuracy: {trainResult.score?.toFixed(2)}</Alert>;
+      trainMetrics = (
+        <Fade in={true} timeout={800}>
+          <Alert 
+            severity="success" 
+            sx={{ 
+              mb: 2, 
+              borderRadius: 2,
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              color: 'white',
+              '& .MuiAlert-icon': { color: 'white' }
+            }}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Test Accuracy: {(trainResult.score * 100).toFixed(1)}%
+            </Typography>
+          </Alert>
+        </Fade>
+      );
     } else if (trainResult.task === 'regression') {
-      trainMetrics = <Alert severity="success" sx={{ mb: 2 }}>R²: {trainResult.r2?.toFixed(2)} | MSE: {trainResult.mse?.toFixed(2)}</Alert>;
+      trainMetrics = (
+        <Fade in={true} timeout={800}>
+          <Alert 
+            severity="success" 
+            sx={{ 
+              mb: 2, 
+              borderRadius: 2,
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              color: 'white',
+              '& .MuiAlert-icon': { color: 'white' }
+            }}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              R²: {trainResult.r2?.toFixed(3)} | MSE: {trainResult.mse?.toFixed(3)}
+            </Typography>
+          </Alert>
+        </Fade>
+      );
     } else if (trainResult.task === 'clustering') {
-      trainMetrics = <Alert severity="success" sx={{ mb: 2 }}>Clustering complete!</Alert>;
+      trainMetrics = (
+        <Fade in={true} timeout={800}>
+          <Alert 
+            severity="success" 
+            sx={{ 
+              mb: 2, 
+              borderRadius: 2,
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              color: 'white',
+              '& .MuiAlert-icon': { color: 'white' }
+            }}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Clustering Complete! 🎉
+            </Typography>
+          </Alert>
+        </Fade>
+      );
     }
   }
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex', bgcolor: 'background.default', minHeight: '100vh' }}>
-        {/* Sidebar Drawer */}
+      <Box sx={{ 
+        display: 'flex', 
+        bgcolor: 'background.default', 
+        minHeight: '100vh',
+        background: darkMode 
+          ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)'
+          : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)'
+      }}>
+        {/* Enhanced Sidebar Drawer */}
         <Drawer
           variant="permanent"
           anchor="left"
@@ -307,71 +443,295 @@ function App() {
               width: drawerWidth, 
               boxSizing: 'border-box', 
               p: 2,
-              bgcolor: 'background.paper'
+              bgcolor: 'background.paper',
+              background: darkMode 
+                ? 'linear-gradient(180deg, #1a1a2e 0%, #16213e 100%)'
+                : 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
+              borderRight: `1px solid ${darkMode ? '#2d3748' : '#e2e8f0'}`,
+              boxShadow: darkMode 
+                ? '2px 0 10px rgba(0, 0, 0, 0.2)'
+                : '2px 0 10px rgba(0, 0, 0, 0.05)'
             }
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h5">MLPlay Controls</Typography>
-            <IconButton onClick={toggleTheme} color="inherit">
+          {/* Header with enhanced styling */}
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            mb: 2,
+            p: 1.5,
+            borderRadius: 2,
+            background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+            color: 'white'
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Science sx={{ fontSize: 20 }} />
+              <Typography variant="h6" sx={{ fontWeight: 700, fontSize: '1rem' }}>
+                MLPlay Controls
+              </Typography>
+            </Box>
+            <IconButton onClick={toggleTheme} sx={{ color: 'white', p: 0.5 }}>
               {darkMode ? <Brightness7 /> : <Brightness4 />}
             </IconButton>
           </Box>
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <InputLabel>Task</InputLabel>
-            <Select value={task} label="Task" onChange={handleTaskChange}>
-              {TASKS.map(t => <MenuItem key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</MenuItem>)}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <InputLabel>Dataset</InputLabel>
-            <Select value={dataset} label="Dataset" onChange={handleDatasetChange}>
-              {DATASETS[task].map(d => <MenuItem key={d} value={d}>{d}</MenuItem>)}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <InputLabel>Model</InputLabel>
-            <Select value={model} label="Model" onChange={handleModelChange}>
-              {MODELS[task].map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
-            </Select>
-          </FormControl>
-          <Divider sx={{ my: 2 }} />
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>Parameters</Typography>
-          {getParamFields(model, params, setParams)}
-          <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-            <Button variant="contained" color="primary" onClick={handlePreview} disabled={loading}>Preview</Button>
-            <Button variant="contained" color="secondary" onClick={handleTrain} disabled={loading}>Train & Visualize</Button>
+
+          {/* Task Selection */}
+          <Paper elevation={0} sx={{ p: 1.5, mb: 1.5, borderRadius: 2, bgcolor: 'rgba(99, 102, 241, 0.05)' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+              <Analytics sx={{ color: 'primary.main', fontSize: 16 }} />
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
+                TASK TYPE
+              </Typography>
+            </Box>
+            <FormControl fullWidth size="small">
+              <InputLabel>Task</InputLabel>
+              <Select value={task} label="Task" onChange={handleTaskChange}>
+                {TASKS.map(t => <MenuItem key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</MenuItem>)}
+              </Select>
+            </FormControl>
+          </Paper>
+
+          {/* Dataset Selection */}
+          <Paper elevation={0} sx={{ p: 1.5, mb: 1.5, borderRadius: 2, bgcolor: 'rgba(236, 72, 153, 0.05)' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+              <Dataset sx={{ color: 'secondary.main', fontSize: 16 }} />
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
+                DATASET
+              </Typography>
+            </Box>
+            <FormControl fullWidth size="small">
+              <InputLabel>Dataset</InputLabel>
+              <Select value={dataset} label="Dataset" onChange={handleDatasetChange}>
+                {DATASETS[task].map(d => <MenuItem key={d} value={d}>{d}</MenuItem>)}
+              </Select>
+            </FormControl>
+          </Paper>
+
+          {/* Model Selection */}
+          <Paper elevation={0} sx={{ p: 1.5, mb: 1.5, borderRadius: 2, bgcolor: 'rgba(16, 185, 129, 0.05)' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+              <ModelTraining sx={{ color: '#10b981', fontSize: 16 }} />
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
+                MODEL
+              </Typography>
+            </Box>
+            <FormControl fullWidth size="small">
+              <InputLabel>Model</InputLabel>
+              <Select value={model} label="Model" onChange={handleModelChange}>
+                {MODELS[task].map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
+              </Select>
+            </FormControl>
+          </Paper>
+
+          {/* Parameters Section */}
+          <Paper elevation={0} sx={{ p: 1.5, mb: 2, borderRadius: 2, bgcolor: 'rgba(245, 158, 11, 0.05)' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+              <Settings sx={{ color: '#f59e0b', fontSize: 16 }} />
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
+                PARAMETERS
+              </Typography>
+            </Box>
+            {getParamFields(model, params, setParams)}
+          </Paper>
+
+          {/* Action Buttons */}
+          <Stack direction="column" spacing={1}>
+            <Button 
+              variant="contained" 
+              startIcon={<Visibility />}
+              onClick={handlePreview} 
+              disabled={loading}
+              size="small"
+              sx={{
+                background: 'linear-gradient(135deg, #6366f1 0%, #818cf8 100%)',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+                },
+                py: 1
+              }}
+            >
+              Preview Dataset
+            </Button>
+            <Button 
+              variant="contained" 
+              startIcon={<PlayArrow />}
+              onClick={handleTrain} 
+              disabled={loading}
+              size="small"
+              sx={{
+                background: 'linear-gradient(135deg, #ec4899 0%, #f472b6 100%)',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #db2777 0%, #ec4899 100%)',
+                },
+                py: 1
+              }}
+            >
+              Train & Visualize
+            </Button>
           </Stack>
         </Drawer>
-        {/* Main Content */}
-        <Box sx={{ flexGrow: 1, p: 3, ml: `${drawerWidth}px`, bgcolor: 'background.default' }}>
-          <Typography variant="h3" gutterBottom align="center" sx={{ color: 'text.primary' }}>MLPlay: ML Playground</Typography>
+
+        {/* Enhanced Main Content */}
+        <Box sx={{ 
+          flexGrow: 1, 
+          p: 3, 
+          ml: 0, 
+          bgcolor: 'transparent',
+          position: 'relative'
+        }}>
+          {/* Header with gradient background */}
+          <Box sx={{ 
+            mb: 3, 
+            p: 3, 
+            borderRadius: 3,
+            background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%)',
+            border: `1px solid ${darkMode ? 'rgba(99, 102, 241, 0.2)' : 'rgba(99, 102, 241, 0.1)'}`,
+            textAlign: 'center'
+          }}>
+            <Typography variant="h3" gutterBottom sx={{ mb: 1, fontSize: '2.5rem' }}>
+              MLPlay: ML Playground
+            </Typography>
+            <Typography variant="h6" sx={{ color: 'text.secondary', fontWeight: 400 }}>
+              Interactive Machine Learning Experimentation Platform
+            </Typography>
+          </Box>
+
+          {/* Loading State */}
           {loading && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
-              <CircularProgress />
-            </Box>
+            <Fade in={true} timeout={300}>
+              <Box sx={{ mb: 3 }}>
+                <LinearProgress 
+                  sx={{ 
+                    height: 8, 
+                    borderRadius: 4,
+                    background: 'rgba(99, 102, 241, 0.1)',
+                    '& .MuiLinearProgress-bar': {
+                      background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 100%)',
+                      borderRadius: 4
+                    }
+                  }} 
+                />
+                <Typography variant="body2" sx={{ mt: 1, textAlign: 'center', color: 'text.secondary' }}>
+                  Processing your request...
+                </Typography>
+              </Box>
+            </Fade>
           )}
+
+          {/* Error State */}
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
+            <Fade in={true} timeout={300}>
+              <Alert 
+                severity="error" 
+                sx={{ 
+                  mb: 3, 
+                  borderRadius: 2,
+                  background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                  color: 'white',
+                  '& .MuiAlert-icon': { color: 'white' }
+                }}
+              >
+                {error}
+              </Alert>
+            </Fade>
           )}
-          {/* Preview Section: Only Matplotlib image preview */}
+
+          {/* Preview Section */}
           {preview && preview.image && (
-            <Card variant="outlined" sx={{ mb: 3, bgcolor: 'background.paper' }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom sx={{ color: 'text.primary' }}>Dataset Preview</Typography>
-                <img src={`data:image/png;base64,${preview.image}`} alt="Preview Visualization" style={{maxWidth: '100%'}} />
-              </CardContent>
-            </Card>
+            <Zoom in={true} timeout={500}>
+              <Card sx={{ 
+                mb: 3, 
+                overflow: 'hidden',
+                border: `1px solid ${darkMode ? '#2d3748' : '#e2e8f0'}`,
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  transition: 'transform 0.3s ease-in-out'
+                }
+              }}>
+                <CardContent sx={{ p: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <Visibility sx={{ color: 'primary.main' }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      Dataset Preview
+                    </Typography>
+                  </Box>
+                  <Box sx={{ 
+                    borderRadius: 2, 
+                    overflow: 'hidden',
+                    border: `1px solid ${darkMode ? '#2d3748' : '#e2e8f0'}`
+                  }}>
+                    <img 
+                      src={`data:image/png;base64,${preview.image}`} 
+                      alt="Preview Visualization" 
+                      style={{
+                        width: '100%',
+                        height: 'auto',
+                        display: 'block'
+                      }} 
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Zoom>
           )}
-          {/* Train Result Section: Only Matplotlib image and metrics */}
+
+          {/* Train Result Section */}
           {trainMetrics}
           {trainResult && trainResult.image && (
-            <Card variant="outlined" sx={{ bgcolor: 'background.paper' }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom sx={{ color: 'text.primary' }}>Result Visualization</Typography>
-                <img src={`data:image/png;base64,${trainResult.image}`} alt="Result Visualization" style={{maxWidth: '100%'}} />
-              </CardContent>
-            </Card>
+            <Zoom in={true} timeout={500}>
+              <Card sx={{ 
+                overflow: 'hidden',
+                border: `1px solid ${darkMode ? '#2d3748' : '#e2e8f0'}`,
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  transition: 'transform 0.3s ease-in-out'
+                }
+              }}>
+                <CardContent sx={{ p: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <TrendingUp sx={{ color: 'secondary.main' }} />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      Result Visualization
+                    </Typography>
+                  </Box>
+                  <Box sx={{ 
+                    borderRadius: 2, 
+                    overflow: 'hidden',
+                    border: `1px solid ${darkMode ? '#2d3748' : '#e2e8f0'}`
+                  }}>
+                    <img 
+                      src={`data:image/png;base64,${trainResult.image}`} 
+                      alt="Result Visualization" 
+                      style={{
+                        width: '100%',
+                        height: 'auto',
+                        display: 'block'
+                      }} 
+                    />
+                  </Box>
+                </CardContent>
+              </Card>
+            </Zoom>
+          )}
+
+          {/* Empty State */}
+          {!preview && !trainResult && !loading && !error && (
+            <Fade in={true} timeout={800}>
+              <Box sx={{ 
+                textAlign: 'center', 
+                py: 6,
+                px: 3
+              }}>
+                <Science sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+                <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
+                  Ready to Experiment?
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: 500, mx: 'auto' }}>
+                  Select your task, dataset, and model parameters from the control panel, then click "Preview Dataset" to see your data or "Train & Visualize" to run your experiment.
+                </Typography>
+              </Box>
+            </Fade>
           )}
         </Box>
       </Box>
