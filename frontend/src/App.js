@@ -336,7 +336,11 @@ function App() {
     setError(null);
     setTrainResult(null);
     try {
-      let sendParams = { ...params };
+      // Merge default params with user params
+      const modelConfig = PARAM_CONFIG[model] || {};
+      let sendParams = { ...Object.fromEntries(
+        Object.entries(modelConfig).map(([k, v]) => [k, v.default])
+      ), ...params };
       // Convert hidden_layer_sizes string to tuple for MLP
       if (model === 'MLP (Neural Net)' && typeof sendParams.hidden_layer_sizes === 'string') {
         try {
@@ -485,8 +489,7 @@ function App() {
               </Typography>
             </Box>
             <FormControl fullWidth size="small">
-              <InputLabel>Task</InputLabel>
-              <Select value={task} label="Task" onChange={handleTaskChange}>
+              <Select value={task} onChange={handleTaskChange}>
                 {TASKS.map(t => <MenuItem key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</MenuItem>)}
               </Select>
             </FormControl>
@@ -501,8 +504,7 @@ function App() {
               </Typography>
             </Box>
             <FormControl fullWidth size="small">
-              <InputLabel>Dataset</InputLabel>
-              <Select value={dataset} label="Dataset" onChange={handleDatasetChange}>
+              <Select value={dataset} onChange={handleDatasetChange}>
                 {DATASETS[task].map(d => <MenuItem key={d} value={d}>{d}</MenuItem>)}
               </Select>
             </FormControl>
@@ -517,8 +519,7 @@ function App() {
               </Typography>
             </Box>
             <FormControl fullWidth size="small">
-              <InputLabel>Model</InputLabel>
-              <Select value={model} label="Model" onChange={handleModelChange}>
+              <Select value={model} onChange={handleModelChange}>
                 {MODELS[task].map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
               </Select>
             </FormControl>
@@ -659,15 +660,19 @@ function App() {
                   <Box sx={{ 
                     borderRadius: 2, 
                     overflow: 'hidden',
-                    border: `1px solid ${darkMode ? '#2d3748' : '#e2e8f0'}`
+                    border: `1px solid ${darkMode ? '#2d3748' : '#e2e8f0'}`,
+                    display: 'flex',
+                    justifyContent: 'center',
                   }}>
                     <img 
                       src={`data:image/png;base64,${preview.image}`} 
                       alt="Preview Visualization" 
                       style={{
+                        maxWidth: '400px',
                         width: '100%',
                         height: 'auto',
-                        display: 'block'
+                        display: 'block',
+                        margin: '0 auto'
                       }} 
                     />
                   </Box>

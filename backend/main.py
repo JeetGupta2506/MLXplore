@@ -136,6 +136,7 @@ def preview(request: PreviewRequest):
 
 @app.post("/train")
 def train(request: TrainRequest):
+    print("Received params:", request.params)
     if request.task == "classification":
         # Dataset selection
         if request.dataset == "Iris":
