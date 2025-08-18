@@ -239,6 +239,7 @@ function App() {
     setModel(e.target.value);
     setParams({});
     setTrainResult(null);
+    setTuningResult(null);
     setError(null);
   };
 
