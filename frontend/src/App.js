@@ -239,15 +239,19 @@ function App() {
     setError(null);
     setPreview(null);
     try {
-      const res = await fetch('/preview', {
+      const res = await fetch('http://localhost:8000/preview', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ task, dataset })
       });
       const data = await res.json();
+      if (data.error) {
+        setError(data.error);
+        return;
+      }
       setPreview(data);
     } catch (err) {
-      setError('Failed to fetch preview');
+      setError(`Failed to fetch preview: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -267,15 +271,19 @@ function App() {
           sendParams.hidden_layer_sizes = [100];
         }
       }
-      const res = await fetch('/train', {
+      const res = await fetch('http://localhost:8000/train', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ task, dataset, model, params: sendParams })
       });
       const data = await res.json();
+      if (data.error) {
+        setError(data.error);
+        return;
+      }
       setTrainResult(data);
     } catch (err) {
-      setError('Failed to train model');
+      setError(`Failed to train model: ${err.message}`);
     } finally {
       setLoading(false);
     }
