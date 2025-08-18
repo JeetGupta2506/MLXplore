@@ -239,7 +239,6 @@ function App() {
     setModel(e.target.value);
     setParams({});
     setTrainResult(null);
-    setTuningResult(null);
     setError(null);
   };
 
@@ -393,6 +392,36 @@ function App() {
               <CardContent>
                 <Typography variant="h6" gutterBottom sx={{ color: 'text.primary' }}>Result Visualization</Typography>
                 <img src={`data:image/png;base64,${trainResult.image}`} alt="Result Visualization" style={{maxWidth: '100%'}} />
+              </CardContent>
+            </Card>
+          )}
+          
+          {/* Hyperparameter Tuning Results */}
+          {tuningResult && (
+            <Card variant="outlined" sx={{ mb: 3, bgcolor: 'background.paper' }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom sx={{ color: 'text.primary' }}>
+                  Hyperparameter Tuning Results
+                </Typography>
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  Best {tuningResult.search_type} search score: {tuningResult.best_score?.toFixed(3)} 
+                  (CV={tuningResult.cv_folds} folds)
+                </Alert>
+                <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.primary' }}>
+                  Best Parameters:
+                </Typography>
+                <Box sx={{ mb: 2, p: 1, bgcolor: 'grey.100', borderRadius: 1 }}>
+                  <pre style={{ margin: 0, fontSize: '0.875rem' }}>
+                    {JSON.stringify(tuningResult.best_params, null, 2)}
+                  </pre>
+                </Box>
+                {tuningResult.image && (
+                  <img 
+                    src={`data:image/png;base64,${tuningResult.image}`} 
+                    alt="Hyperparameter Tuning Results" 
+                    style={{maxWidth: '100%'}} 
+                  />
+                )}
               </CardContent>
             </Card>
           )}
