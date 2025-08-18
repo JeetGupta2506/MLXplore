@@ -184,6 +184,12 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
+  const [tuningMode, setTuningMode] = useState(false);
+  const [tuningParams, setTuningParams] = useState({});
+  const [tuningResult, setTuningResult] = useState(null);
+  const [searchType, setSearchType] = useState('grid');
+  const [cvFolds, setCvFolds] = useState(5);
+  const [nIter, setNIter] = useState(10);
 
   // Create theme based on darkMode state
   const theme = createTheme({
