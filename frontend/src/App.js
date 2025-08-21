@@ -167,6 +167,8 @@ function getParamFields(model, params, setParams, extra) {
             onChange={e => setParams(p => ({ ...p, [key]: e.target.value }))}
           >
             {cfg.options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
+            )
+            }
           </Select>
         </FormControl>
       );
@@ -502,6 +504,8 @@ function App() {
               <InputLabel>Task</InputLabel>
               <Select value={task} label="Task" onChange={handleTaskChange}>
                 {TASKS.map(t => <MenuItem key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</MenuItem>)}
+                )
+                }
               </Select>
             </FormControl>
           </Paper>
@@ -518,6 +522,8 @@ function App() {
               <InputLabel>Dataset</InputLabel>
               <Select value={dataset} label="Dataset" onChange={handleDatasetChange}>
                 {DATASETS[task].map(d => <MenuItem key={d} value={d}>{d}</MenuItem>)}
+                )
+                }
               </Select>
             </FormControl>
           </Paper>
@@ -534,6 +540,8 @@ function App() {
               <InputLabel>Model</InputLabel>
               <Select value={model} label="Model" onChange={handleModelChange}>
                 {MODELS[task].map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
+                )
+                }
               </Select>
             </FormControl>
           </Paper>
@@ -662,15 +670,21 @@ function App() {
                   <Box sx={{ 
                     borderRadius: 2, 
                     overflow: 'hidden',
-                    border: `1px solid ${darkMode ? '#2d3748' : '#e2e8f0'}`
+                    border: `1px solid ${darkMode ? '#2d3748' : '#e2e8f0'}`,
+                    maxWidth: '100%',
+                    display: 'flex',
+                    justifyContent: 'center'
                   }}>
                     <img 
                       src={`data:image/png;base64,${preview.image}`} 
                       alt="Preview Visualization" 
                       style={{
-                        width: '100%',
+                        maxWidth: '100%',
+                        width: 'auto',
                         height: 'auto',
-                        display: 'block'
+                        maxHeight: '400px',
+                        display: 'block',
+                        objectFit: 'contain'
                       }} 
                     />
                   </Box>
@@ -701,15 +715,21 @@ function App() {
                   <Box sx={{ 
                     borderRadius: 2, 
                     overflow: 'hidden',
-                    border: `1px solid ${darkMode ? '#2d3748' : '#e2e8f0'}`
+                    border: `1px solid ${darkMode ? '#2d3748' : '#e2e8f0'}`,
+                    maxWidth: '100%',
+                    display: 'flex',
+                    justifyContent: 'center'
                   }}>
                     <img 
                       src={`data:image/png;base64,${trainResult.image}`} 
                       alt="Result Visualization" 
                       style={{
-                        width: '100%',
+                        maxWidth: '100%',
+                        width: 'auto',
                         height: 'auto',
-                        display: 'block'
+                        maxHeight: '400px',
+                        display: 'block',
+                        objectFit: 'contain'
                       }} 
                     />
                   </Box>
