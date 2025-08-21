@@ -271,15 +271,17 @@ html {
 
 /* Preview image constraints */
 .MuiCard-root img {
-  width: 300px !important;
   max-width: 100% !important;
+  width: auto !important;
   height: auto !important;
   display: block !important;
   margin: 0 auto !important;
+  max-height: 400px !important;
+  object-fit: contain !important;
 }
 
 /* Card container constraints */
 .MuiCard-root {
-  max-width: 340px !important;
+  max-width: 800px !important;
   margin: 0 auto !important;
 }
