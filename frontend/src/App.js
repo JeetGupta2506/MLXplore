@@ -167,8 +167,6 @@ function getParamFields(model, params, setParams, extra) {
             onChange={e => setParams(p => ({ ...p, [key]: e.target.value }))}
           >
             {cfg.options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
-            )
-            }
           </Select>
         </FormControl>
       );
@@ -504,8 +502,6 @@ function App() {
               <InputLabel>Task</InputLabel>
               <Select value={task} label="Task" onChange={handleTaskChange}>
                 {TASKS.map(t => <MenuItem key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</MenuItem>)}
-                )
-                }
               </Select>
             </FormControl>
           </Paper>
@@ -522,8 +518,6 @@ function App() {
               <InputLabel>Dataset</InputLabel>
               <Select value={dataset} label="Dataset" onChange={handleDatasetChange}>
                 {DATASETS[task].map(d => <MenuItem key={d} value={d}>{d}</MenuItem>)}
-                )
-                }
               </Select>
             </FormControl>
           </Paper>
@@ -540,8 +534,6 @@ function App() {
               <InputLabel>Model</InputLabel>
               <Select value={model} label="Model" onChange={handleModelChange}>
                 {MODELS[task].map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
-                )
-                }
               </Select>
             </FormControl>
           </Paper>
