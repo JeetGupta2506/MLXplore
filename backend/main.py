@@ -77,11 +77,14 @@ def preview(request: PreviewRequest):
         else:
             return {"error": "Unknown dataset"}
         # --- Matplotlib image generation ---
-        fig, ax = plt.subplots()
-        scatter = ax.scatter(X[:,0], X[:,1], c=y, cmap='tab10', edgecolor='k')
-        ax.set_title("Dataset Preview (colored by class/target)")
+        fig, ax = plt.subplots(figsize=(6, 4), dpi=150)
+        scatter = ax.scatter(X[:,0], X[:,1], c=y, cmap='tab10', edgecolor='k', s=30)
+        ax.set_title("Dataset Preview (colored by class/target)", fontsize=12)
+        ax.set_xlabel("Feature 1", fontsize=10)
+        ax.set_ylabel("Feature 2", fontsize=10)
+        plt.tight_layout()
         buf = BytesIO()
-        plt.savefig(buf, format='png')
+        plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
         buf.seek(0)
         img_base64 = base64.b64encode(buf.read()).decode('utf-8')
         plt.close()
@@ -96,11 +99,14 @@ def preview(request: PreviewRequest):
         else:
             return {"error": f"Unknown regression dataset: {request.dataset}"}
         # --- Matplotlib image generation ---
-        fig, ax = plt.subplots()
-        scatter = ax.scatter(X[:,0], X[:,1], c=y, cmap='viridis', edgecolor='k')
-        ax.set_title("Dataset Preview (colored by target)")
+        fig, ax = plt.subplots(figsize=(6, 4), dpi=150)
+        scatter = ax.scatter(X[:,0], X[:,1], c=y, cmap='viridis', edgecolor='k', s=30)
+        ax.set_title("Dataset Preview (colored by target)", fontsize=12)
+        ax.set_xlabel("Feature 1", fontsize=10)
+        ax.set_ylabel("Feature 2", fontsize=10)
+        plt.tight_layout()
         buf = BytesIO()
-        plt.savefig(buf, format='png')
+        plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
         buf.seek(0)
         img_base64 = base64.b64encode(buf.read()).decode('utf-8')
         plt.close()
@@ -121,11 +127,14 @@ def preview(request: PreviewRequest):
         else:
             return {"error": "Unknown clustering dataset"}
         # --- Matplotlib image generation ---
-        fig, ax = plt.subplots()
-        scatter = ax.scatter(X[:,0], X[:,1], edgecolor='k')
-        ax.set_title("Dataset Preview")
+        fig, ax = plt.subplots(figsize=(6, 4), dpi=150)
+        scatter = ax.scatter(X[:,0], X[:,1], edgecolor='k', s=30)
+        ax.set_title("Dataset Preview", fontsize=12)
+        ax.set_xlabel("Feature 1", fontsize=10)
+        ax.set_ylabel("Feature 2", fontsize=10)
+        plt.tight_layout()
         buf = BytesIO()
-        plt.savefig(buf, format='png')
+        plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
         buf.seek(0)
         img_base64 = base64.b64encode(buf.read()).decode('utf-8')
         plt.close()
@@ -262,19 +271,19 @@ def tune_hyperparameters(request: TuneRequest):
             ax2.scatter(X[:,0], y, c='blue', alpha=0.7, label='Data')
             ax2.plot(X_sorted, y_pred_plot, 'r-', linewidth=2, label='Best Model')
             ax2.set_xlabel("Feature 1")
+            ax2.set_ylabel("Target")
+            ax2.set_title('Best Model Fit')
+            ax2.legend()
         plt.tight_layout()
         buf = BytesIO()
         plt.savefig(buf, format='png', dpi=100)
         buf.seek(0)
         img_base64 = base64.b64encode(buf.read()).decode('utf-8')
         plt.close()
-            ax2.set_ylabel("Target")
         results["image"] = img_base64
         return results
-            ax2.set_title('Best Model Fit')
     except Exception as e:
         return {"error": f"Hyperparameter tuning failed: {str(e)}"}
-            ax2.legend()
 @app.post("/train")
 def train(request: TrainRequest):
     if request.task == "classification":
@@ -335,12 +344,15 @@ def train(request: TrainRequest):
         Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
         Z = Z.reshape(xx.shape)
         # --- Plot decision boundary and full dataset ---
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(6, 4), dpi=150)
         ax.contourf(xx, yy, Z, alpha=0.3)
-        scatter = ax.scatter(X[:,0], X[:,1], c=y, marker='o', edgecolor='k', alpha=0.8)
-        ax.set_title("Decision Boundary & Full Dataset")
+        scatter = ax.scatter(X[:,0], X[:,1], c=y, marker='o', edgecolor='k', alpha=0.8, s=30)
+        ax.set_title("Decision Boundary & Full Dataset", fontsize=12)
+        ax.set_xlabel("Feature 1", fontsize=10)
+        ax.set_ylabel("Feature 2", fontsize=10)
+        plt.tight_layout()
         buf = BytesIO()
-        plt.savefig(buf, format='png')
+        plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
         buf.seek(0)
         img_base64 = base64.b64encode(buf.read()).decode('utf-8')
         plt.close()
@@ -381,21 +393,22 @@ def train(request: TrainRequest):
         r2 = r2_score(y_test, y_pred)
         mse = mean_squared_error(y_test, y_pred)
         # --- Plot regression on full dataset ---
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(6, 4), dpi=150)
         # Plot full dataset
-        ax.scatter(X[:,0], y, c='blue', alpha=0.7, label='Data')
+        ax.scatter(X[:,0], y, c='blue', alpha=0.7, label='Data', s=30)
         # Plot regression line/curve - use both features
         X_sorted = np.sort(X[:,0])
         # Create 2D array with both features for prediction
         X_plot = np.column_stack([X_sorted, np.full_like(X_sorted, X[:,1].mean())])  # Use mean of second feature
         y_pred_plot = model.predict(X_plot)
         ax.plot(X_sorted, y_pred_plot, 'r-', linewidth=2, label='Regression Line')
-        ax.set_xlabel("Feature 1")
-        ax.set_ylabel("Target")
-        ax.set_title("Regression: Model Fit on Full Dataset")
-        ax.legend()
+        ax.set_xlabel("Feature 1", fontsize=10)
+        ax.set_ylabel("Target", fontsize=10)
+        ax.set_title("Regression: Model Fit on Full Dataset", fontsize=12)
+        ax.legend(fontsize=7)
+        plt.tight_layout()
         buf = BytesIO()
-        plt.savefig(buf, format='png')
+        plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
         buf.seek(0)
         img_base64 = base64.b64encode(buf.read()).decode('utf-8')
         plt.close()
@@ -435,11 +448,14 @@ def train(request: TrainRequest):
             return {"error": "Unknown clustering model"}
         labels = model.fit_predict(X)
         # --- Plot clustering result ---
-        fig, ax = plt.subplots()
-        scatter = ax.scatter(X[:,0], X[:,1], c=labels, cmap='tab10', edgecolor='k')
-        ax.set_title("Clustering Result")
+        fig, ax = plt.subplots(figsize=(6, 4), dpi=150)
+        scatter = ax.scatter(X[:,0], X[:,1], c=labels, cmap='tab10', edgecolor='k', s=30)
+        ax.set_title("Clustering Result", fontsize=12)
+        ax.set_xlabel("Feature 1", fontsize=10)
+        ax.set_ylabel("Feature 2", fontsize=10)
+        plt.tight_layout()
         buf = BytesIO()
-        plt.savefig(buf, format='png')
+        plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
         buf.seek(0)
         img_base64 = base64.b64encode(buf.read()).decode('utf-8')
         plt.close()
