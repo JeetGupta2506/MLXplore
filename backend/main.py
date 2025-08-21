@@ -9,7 +9,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neural_network import MLPClassifier
-from sklearn.datasets import make_moons, make_blobs, load_wine, load_breast_cancer, load_digits, make_circles, make_gaussian_quantiles, load_diabetes, make_regression, fetch_california_housing
+from sklearn.datasets import make_moons, make_blobs, load_wine, load_breast_cancer, make_circles, make_gaussian_quantiles, load_diabetes, make_regression, fetch_california_housing
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
@@ -62,9 +62,6 @@ def preview(request: PreviewRequest):
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Breast Cancer":
             data = load_breast_cancer()
-            X, y = data.data[:, :2], data.target
-        elif request.dataset == "Digits":
-            data = load_digits()
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Moons":
             X, y = make_moons(n_samples=100, noise=0, random_state=0)
@@ -156,9 +153,6 @@ def tune_hyperparameters(request: TuneRequest):
                 X, y = data.data[:, :2], data.target
             elif request.dataset == "Breast Cancer":
                 data = load_breast_cancer()
-                X, y = data.data[:, :2], data.target
-            elif request.dataset == "Digits":
-                data = load_digits()
                 X, y = data.data[:, :2], data.target
             elif request.dataset == "Moons":
                 X, y = make_moons(n_samples=200, noise=0.1, random_state=0)
@@ -296,9 +290,6 @@ def train(request: TrainRequest):
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Breast Cancer":
             data = load_breast_cancer()
-            X, y = data.data[:, :2], data.target
-        elif request.dataset == "Digits":
-            data = load_digits()
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Moons":
             X, y = make_moons(n_samples=100, noise=0, random_state=0)

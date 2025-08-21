@@ -48,7 +48,7 @@ const TASKS = [
 
 const DATASETS = {
   classification: [
-    'Iris', 'Wine', 'Breast Cancer', 'Digits', 'Moons', 'Blobs', 'Circles', 'Gaussian Quantiles'
+    'Iris', 'Wine', 'Breast Cancer', 'Moons', 'Blobs', 'Circles', 'Gaussian Quantiles'
   ],
   regression: [
     'California Housing', 'Synthetic'
@@ -492,12 +492,6 @@ function App() {
 
           {/* Task Selection */}
           <Paper elevation={0} sx={{ p: 1.5, mb: 1.5, borderRadius: 2, bgcolor: 'rgba(99, 102, 241, 0.05)' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-              <Analytics sx={{ color: 'primary.main', fontSize: 16 }} />
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
-                TASK TYPE
-              </Typography>
-            </Box>
             <FormControl fullWidth size="small">
               <InputLabel>Task</InputLabel>
               <Select value={task} label="Task" onChange={handleTaskChange}>
@@ -508,12 +502,6 @@ function App() {
 
           {/* Dataset Selection */}
           <Paper elevation={0} sx={{ p: 1.5, mb: 1.5, borderRadius: 2, bgcolor: 'rgba(236, 72, 153, 0.05)' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-              <Dataset sx={{ color: 'secondary.main', fontSize: 16 }} />
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
-                DATASET
-              </Typography>
-            </Box>
             <FormControl fullWidth size="small">
               <InputLabel>Dataset</InputLabel>
               <Select value={dataset} label="Dataset" onChange={handleDatasetChange}>
@@ -524,12 +512,6 @@ function App() {
 
           {/* Model Selection */}
           <Paper elevation={0} sx={{ p: 1.5, mb: 1.5, borderRadius: 2, bgcolor: 'rgba(16, 185, 129, 0.05)' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-              <ModelTraining sx={{ color: '#10b981', fontSize: 16 }} />
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
-                MODEL
-              </Typography>
-            </Box>
             <FormControl fullWidth size="small">
               <InputLabel>Model</InputLabel>
               <Select value={model} label="Model" onChange={handleModelChange}>
@@ -540,12 +522,6 @@ function App() {
 
           {/* Parameters Section */}
           <Paper elevation={0} sx={{ p: 1.5, mb: 2, borderRadius: 2, bgcolor: 'rgba(245, 158, 11, 0.05)' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-              <Settings sx={{ color: '#f59e0b', fontSize: 16 }} />
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
-                PARAMETERS
-              </Typography>
-            </Box>
             {getParamFields(model, params, setParams)}
           </Paper>
 
