@@ -9,12 +9,13 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neural_network import MLPClassifier
-from sklearn.datasets import make_moons, make_blobs, load_wine, load_breast_cancer, load_digits, make_circles, make_gaussian_quantiles, load_diabetes, make_regression, fetch_california_housing
+from sklearn.datasets import make_moons, make_blobs, load_wine, load_breast_cancer, make_circles, make_gaussian_quantiles, load_diabetes, make_regression, fetch_california_housing
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 import numpy as np
 from fastapi.middleware.cors import CORSMiddleware
+import os
 # --- Add for image generation ---
 import matplotlib
 matplotlib.use('Agg')
@@ -25,9 +26,12 @@ import base64
 
 app = FastAPI()
 
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000")
+allowed_origins = [origin.strip() for origin in allowed_origins_env.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # React dev server
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -62,9 +66,6 @@ def preview(request: PreviewRequest):
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Breast Cancer":
             data = load_breast_cancer()
-            X, y = data.data[:, :2], data.target
-        elif request.dataset == "Digits":
-            data = load_digits()
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Moons":
             X, y = make_moons(n_samples=100, noise=0, random_state=0)
@@ -156,9 +157,6 @@ def tune_hyperparameters(request: TuneRequest):
                 X, y = data.data[:, :2], data.target
             elif request.dataset == "Breast Cancer":
                 data = load_breast_cancer()
-                X, y = data.data[:, :2], data.target
-            elif request.dataset == "Digits":
-                data = load_digits()
                 X, y = data.data[:, :2], data.target
             elif request.dataset == "Moons":
                 X, y = make_moons(n_samples=200, noise=0.1, random_state=0)
@@ -296,9 +294,6 @@ def train(request: TrainRequest):
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Breast Cancer":
             data = load_breast_cancer()
-            X, y = data.data[:, :2], data.target
-        elif request.dataset == "Digits":
-            data = load_digits()
             X, y = data.data[:, :2], data.target
         elif request.dataset == "Moons":
             X, y = make_moons(n_samples=100, noise=0, random_state=0)

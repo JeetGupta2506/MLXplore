@@ -38,6 +38,8 @@ import {
   Analytics
 } from '@mui/icons-material';
 
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+
 const drawerWidth = 300;
 
 const TASKS = [
@@ -48,7 +50,7 @@ const TASKS = [
 
 const DATASETS = {
   classification: [
-    'Iris', 'Wine', 'Breast Cancer', 'Digits', 'Moons', 'Blobs', 'Circles', 'Gaussian Quantiles'
+    'Iris', 'Wine', 'Breast Cancer', 'Moons', 'Blobs', 'Circles', 'Gaussian Quantiles'
   ],
   regression: [
     'California Housing', 'Synthetic'
@@ -167,8 +169,6 @@ function getParamFields(model, params, setParams, extra) {
             onChange={e => setParams(p => ({ ...p, [key]: e.target.value }))}
           >
             {cfg.options.map(opt => <MenuItem key={opt} value={opt}>{opt}</MenuItem>)}
-            )
-            }
           </Select>
         </FormControl>
       );
@@ -325,7 +325,7 @@ function App() {
     setError(null);
     setPreview(null);
     try {
-      const res = await fetch('http://localhost:8000/preview', {
+      const res = await fetch(`${API_BASE}/preview`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ task, dataset })
@@ -357,7 +357,7 @@ function App() {
           sendParams.hidden_layer_sizes = [100];
         }
       }
-      const res = await fetch('http://localhost:8000/train', {
+      const res = await fetch(`${API_BASE}/train`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ task, dataset, model, params: sendParams })
@@ -494,66 +494,36 @@ function App() {
 
           {/* Task Selection */}
           <Paper elevation={0} sx={{ p: 1.5, mb: 1.5, borderRadius: 2, bgcolor: 'rgba(99, 102, 241, 0.05)' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-              <Analytics sx={{ color: 'primary.main', fontSize: 16 }} />
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
-                TASK TYPE
-              </Typography>
-            </Box>
             <FormControl fullWidth size="small">
               <InputLabel>Task</InputLabel>
               <Select value={task} label="Task" onChange={handleTaskChange}>
                 {TASKS.map(t => <MenuItem key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</MenuItem>)}
-                )
-                }
               </Select>
             </FormControl>
           </Paper>
 
           {/* Dataset Selection */}
           <Paper elevation={0} sx={{ p: 1.5, mb: 1.5, borderRadius: 2, bgcolor: 'rgba(236, 72, 153, 0.05)' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-              <Dataset sx={{ color: 'secondary.main', fontSize: 16 }} />
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
-                DATASET
-              </Typography>
-            </Box>
             <FormControl fullWidth size="small">
               <InputLabel>Dataset</InputLabel>
               <Select value={dataset} label="Dataset" onChange={handleDatasetChange}>
                 {DATASETS[task].map(d => <MenuItem key={d} value={d}>{d}</MenuItem>)}
-                )
-                }
               </Select>
             </FormControl>
           </Paper>
 
           {/* Model Selection */}
           <Paper elevation={0} sx={{ p: 1.5, mb: 1.5, borderRadius: 2, bgcolor: 'rgba(16, 185, 129, 0.05)' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-              <ModelTraining sx={{ color: '#10b981', fontSize: 16 }} />
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
-                MODEL
-              </Typography>
-            </Box>
             <FormControl fullWidth size="small">
               <InputLabel>Model</InputLabel>
               <Select value={model} label="Model" onChange={handleModelChange}>
                 {MODELS[task].map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
-                )
-                }
               </Select>
             </FormControl>
           </Paper>
 
           {/* Parameters Section */}
           <Paper elevation={0} sx={{ p: 1.5, mb: 2, borderRadius: 2, bgcolor: 'rgba(245, 158, 11, 0.05)' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-              <Settings sx={{ color: '#f59e0b', fontSize: 16 }} />
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'text.secondary', fontSize: '0.75rem' }}>
-                PARAMETERS
-              </Typography>
-            </Box>
             {getParamFields(model, params, setParams)}
           </Paper>
 
