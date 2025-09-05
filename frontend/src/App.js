@@ -571,7 +571,7 @@ function App() {
             textAlign: 'center'
           }}>
             <Typography variant="h3" gutterBottom sx={{ mb: 1, fontSize: '2.5rem' }}>
-              MLPlay: ML Playground
+              MLXplore: ML Playground
             </Typography>
             <Typography variant="h6" sx={{ color: 'text.secondary', fontWeight: 400 }}>
               Interactive Machine Learning Experimentation Platform
