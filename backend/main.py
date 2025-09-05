@@ -15,6 +15,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 import numpy as np
 from fastapi.middleware.cors import CORSMiddleware
+import os
 # --- Add for image generation ---
 import matplotlib
 matplotlib.use('Agg')
@@ -25,9 +26,12 @@ import base64
 
 app = FastAPI()
 
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000")
+allowed_origins = [origin.strip() for origin in allowed_origins_env.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # React dev server
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -38,6 +38,8 @@ import {
   Analytics
 } from '@mui/icons-material';
 
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+
 const drawerWidth = 300;
 
 const TASKS = [
@@ -323,7 +325,7 @@ function App() {
     setError(null);
     setPreview(null);
     try {
-      const res = await fetch('http://localhost:8000/preview', {
+      const res = await fetch(`${API_BASE}/preview`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ task, dataset })
@@ -355,7 +357,7 @@ function App() {
           sendParams.hidden_layer_sizes = [100];
         }
       }
-      const res = await fetch('http://localhost:8000/train', {
+      const res = await fetch(`${API_BASE}/train`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ task, dataset, model, params: sendParams })
